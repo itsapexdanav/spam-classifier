@@ -61,9 +61,11 @@ if st.button("Predict"):
     else:
         transform_sms = transform_text(input_sms)
         vector_input = tfidf.transform([transform_sms])
-        result = model.predict(vector_input)[0]
+        spam_prob = model.predict_proba(vector_input)[0][1]
 
-        if result == 1:
-            st.error("🚨 Spam")
+        if spam_prob > 0.30:
+            st.error(f"🚨 Spam (confidence: {spam_prob:.2f})")
         else:
-            st.success("✅ Not Spam")
+            st.success(f"✅ Not Spam (confidence: {1-spam_prob:.2f})")
+
+
